@@ -1,0 +1,33 @@
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+.venv/
+venv/
+env/
+envs/
+ENV/
+Scripts/
+
+# Spyder project settings
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# MyPy cache
+.mypy_cache/
+
+# pyenv local Python version-file
+.python-version
+
+# Poetry related
+poetry.lock
+.venv
+
+# Celery Flower database (if you use it)
+flowerconfig.db
