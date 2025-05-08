@@ -1,7 +1,16 @@
+import uvicorn
+from fastapi import FastAPI, Depends
+from sqlmodel import Session, select
+from typing import List
+from src.posts.router import router
+from database import get_db
+import logging
 
-def ten_nguoi(minhdang:str):
-    print(minhdang)
+logging.basicConfig(level=logging.INFO)
+app = FastAPI()
 
+# Thêm prefix cho router
+app.include_router(router)
 
-if __name__ == '__main__':
-    print(ten_nguoi("MinhDang siu cap dep zai push lan dau "))
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="localhost", port=8004, reload=True)
