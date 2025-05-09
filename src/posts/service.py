@@ -22,6 +22,15 @@ def du_lieu_status(TrangThaiEnum: str , trang_thais:List[TrangThaiEnum] , page :
         if TrangThaiEnum.tu_choi in trang_thais:
             url = f"https://vietnamtrademark.net/search?s=Từ%20chối&p={page}"
             headers = {"User-Agent": "Mozilla/5.0"}
+        if TrangThaiEnum.cap_bang in trang_thais:
+            url = f"https://vietnamtrademark.net/search?s=Cấp%20bằng&p={page}"
+            headers = {"User-Agent": "Mozilla/5.0"}
+        if TrangThaiEnum.dang_giai_quyet in trang_thais:
+            url = f"https://vietnamtrademark.net/search?s=Đang%20giải%20quyết&p={page}"
+            headers = {"User-Agent": "Mozilla/5.0"}
+        if TrangThaiEnum.rut_don in trang_thais:
+            url = f"https://vietnamtrademark.net/search?s=Rút%20đơn&p={page}"
+            headers = {"User-Agent": "Mozilla/5.0"}
         if url:
             try:
                 resp = requests.get(url, headers=headers)
