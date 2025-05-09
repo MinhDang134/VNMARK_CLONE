@@ -31,6 +31,62 @@ def du_lieu_status(TrangThaiEnum: str , trang_thais:List[TrangThaiEnum] , page :
         if TrangThaiEnum.rut_don in trang_thais:
             url = f"https://vietnamtrademark.net/search?s=Rút%20đơn&p={page}"
             headers = {"User-Agent": "Mozilla/5.0"}
+        # rut_don
+        if TrangThaiEnum.rut_don in trang_thais and TrangThaiEnum.dang_giai_quyet in trang_thais:
+            url = f"https://vietnamtrademark.net/search?s=Đang%20giải%20quyết&s=Rút%20đơn&p={page}"
+            headers = {"User-Agent": "Mozilla/5.0"}
+        if TrangThaiEnum.rut_don in trang_thais and TrangThaiEnum.cap_bang in trang_thais:
+            url = f"https://vietnamtrademark.net/search?s=Cấp%20bằng&s=Rút%20đơn&p={page}"
+            headers = {"User-Agent": "Mozilla/5.0"}
+        if TrangThaiEnum.rut_don in trang_thais and TrangThaiEnum.tu_choi in trang_thais:
+            url = f"https://vietnamtrademark.net/search?s=Từ%20chối&s=Rút%20đơn&p={page}"
+            headers = {"User-Agent": "Mozilla/5.0"}
+        #tu_choi
+        if TrangThaiEnum.tu_choi in trang_thais and TrangThaiEnum.dang_giai_quyet in trang_thais:
+            url = f"https://vietnamtrademark.net/search?s=Đang%20giải%20quyết&s=Từ%20chối&p={page}"
+            headers = {"User-Agent": "Mozilla/5.0"}
+        if TrangThaiEnum.tu_choi in trang_thais and TrangThaiEnum.cap_bang in trang_thais:
+            url = f"https://vietnamtrademark.net/search?s=Cấp%20bằng&s=Từ%20chối&p={page}"
+            headers = {"User-Agent": "Mozilla/5.0"}
+        if TrangThaiEnum.tu_choi in trang_thais and TrangThaiEnum.rut_don in trang_thais:
+            url = f"https://vietnamtrademark.net/search?s=Từ%20chối&s=Rút%20đơn&p={page}"
+            headers = {"User-Agent": "Mozilla/5.0"}
+        #dang_giai_quyet
+        if TrangThaiEnum.dang_giai_quyet in trang_thais and TrangThaiEnum.tu_choi in trang_thais:
+            url = f"https://vietnamtrademark.net/search?s=Đang%20giải%20quyết&s=Từ%20chối&p={page}"
+            headers = {"User-Agent": "Mozilla/5.0"}
+        if TrangThaiEnum.dang_giai_quyet in trang_thais and TrangThaiEnum.cap_bang in trang_thais:
+            url = f"https://vietnamtrademark.net/search?s=Cấp%20bằng&s=Đang%20giải%20quyết&p={page}"
+            headers = {"User-Agent": "Mozilla/5.0"}
+        if TrangThaiEnum.dang_giai_quyet in trang_thais and TrangThaiEnum.rut_don in trang_thais:
+            url = f"https://vietnamtrademark.net/search?s=Đang%20giải%20quyết&s=Rút%20đơn&p={page}"
+            headers = {"User-Agent": "Mozilla/5.0"}
+        #cap_bang
+        if TrangThaiEnum.cap_bang in trang_thais and TrangThaiEnum.tu_choi in trang_thais:
+            url = f"https://vietnamtrademark.net/search?s=Cấp%20bằng&s=Từ%20chối&p={page}"
+            headers = {"User-Agent": "Mozilla/5.0"}
+        if TrangThaiEnum.cap_bang in trang_thais and TrangThaiEnum.dang_giai_quyet in trang_thais:
+            url = f"https://vietnamtrademark.net/search?s=Cấp%20bằng&s=Đang%20giải%20quyết&p={page}"
+            headers = {"User-Agent": "Mozilla/5.0"}
+        if TrangThaiEnum.cap_bang in trang_thais and TrangThaiEnum.rut_don in trang_thais:
+            url = f"https://vietnamtrademark.net/search?s=Cấp%20bằng&s=Rút%20đơn&p={page}"
+            headers = {"User-Agent": "Mozilla/5.0"}
+        # 3 dau
+        if TrangThaiEnum.cap_bang in trang_thais and TrangThaiEnum.dang_giai_quyet in trang_thais and TrangThaiEnum.rut_don in trang_thais:
+            url = f"https://vietnamtrademark.net/search?s=Cấp%20bằng&s=Đang%20giải%20quyết&s=Rút%20đơn&p={page}"
+            headers = {"User-Agent": "Mozilla/5.0"}
+        if TrangThaiEnum.dang_giai_quyet in trang_thais and TrangThaiEnum.rut_don in trang_thais and TrangThaiEnum.tu_choi in trang_thais:
+            url = f"https://vietnamtrademark.net/search?s=Đang%20giải%20quyết&s=Từ%20chối&s=Rút%20đơn&p={page}"
+            headers = {"User-Agent": "Mozilla/5.0"}
+        if TrangThaiEnum.rut_don in trang_thais and TrangThaiEnum.tu_choi in trang_thais and TrangThaiEnum.cap_bang in trang_thais:
+            url = f"https://vietnamtrademark.net/search?s=Cấp%20bằng&s=Từ%20chối&s=Rút%20đơn&p={page}"
+            headers = {"User-Agent": "Mozilla/5.0"}
+        if TrangThaiEnum.tu_choi in trang_thais and TrangThaiEnum.cap_bang in trang_thais and TrangThaiEnum.dang_giai_quyet in trang_thais:
+            url = f"https://vietnamtrademark.net/search?s=Đang%20giải%20quyết&s=Từ%20chối&p={page}"
+            headers = {"User-Agent": "Mozilla/5.0"}
+        if TrangThaiEnum.tu_choi in trang_thais and TrangThaiEnum.cap_bang in trang_thais and TrangThaiEnum.dang_giai_quyet in trang_thais and TrangThaiEnum.rut_don in trang_thais:
+            url = f"https://vietnamtrademark.net/search?s=Cấp%20bằng&s=Đang%20giải%20quyết&s=Từ%20chối&s=Rút%20đơn&p={page}"
+            headers = {"User-Agent": "Mozilla/5.0"}
         if url:
             try:
                 resp = requests.get(url, headers=headers)
