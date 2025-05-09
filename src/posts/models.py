@@ -15,3 +15,5 @@ class Nhan(SQLModel, table = True):
     chudon : str
     daidienshcn : str
 
+class Config:
+    orm_mode = True
