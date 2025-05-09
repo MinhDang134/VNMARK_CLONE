@@ -21,12 +21,12 @@ def root():
     return {"message": "API đang hoạt động bình thường"}
 
 @router.get("/search/", response_model=List[Nhan])
-def nhan_valuu_dulieu_nhanhieu(q: str, db: Session = Depends(get_db)):
-    nh_dulieu = du_lieu_ten(q)
+def nhan_valuu_dulieu_nhanhieu(q: str, page:str ,db: Session = Depends(get_db)):
+    nh_dulieu = du_lieu_ten(q,page)
     saved = []
     for nh in nh_dulieu:#
-            saved_stn = luu_from_router_don(nh, saved, db, nhan_crud)
-    return saved
+            saved_tt = luu_from_router_don(nh, saved, db, nhan_crud)
+    return saved_tt
 
 
 @router.get("/search_theongay",response_model=List[Nhan])
@@ -36,7 +36,7 @@ def nhan_dulieu_search_theongay(start : str , end : str, db: Session = Depends(g
     for stn in stn_dulieu:
         saved_stn = luu_from_router_don(stn,saved_stn,db,nhan_crud)
     return saved_stn
-@router.get("/status")
+@router.get("/search_status")
 def nhan_dulieu_status(
     page: Optional[str],
     db : Session = Depends(get_db),
@@ -46,6 +46,11 @@ def nhan_dulieu_status(
     for st in st_dulieu:
         saved_st = luu_from_router_don(st,saved_st,db,nhan_crud)
     return saved_st
+
+# @router.get("/research_shcn")
+# def nhan_dulieu_shcn(page: Optional[str],daidien_shcn: str,db: Session = Depends(get_db)):
+#     dd_shcn_dulieu = du_lieu_ten(daidien_shcn,page)
+
 
 
 

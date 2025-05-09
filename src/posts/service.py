@@ -111,8 +111,8 @@ def du_lieu_status(TrangThaiEnum: str , trang_thais:List[TrangThaiEnum] , page :
         logging.info(f"Lỗi tổng quát: {e}")
         return []
 
-def du_lieu_ten(q: str) -> List[Nhan]:
-    url = f"https://vietnamtrademark.net/search?q={q}"
+def du_lieu_ten(q: str,page:str) -> List[Nhan]:
+    url = f"https://vietnamtrademark.net/search?q={q}&p={page}"
     headers = {"User-Agent": "Mozilla/5.0"}
 
     try:
