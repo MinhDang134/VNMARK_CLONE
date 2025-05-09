@@ -17,7 +17,7 @@ from src.posts.crud_base import CRUDBase
 router = APIRouter()
 nhan_crud = CRUDBase(Nhan)
 
-@router.get("/")
+@router.get("/search_DON")
 def root():
     return {"message": "API đang hoạt động bình thường"}
 
