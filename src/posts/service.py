@@ -9,9 +9,42 @@ from bs4 import BeautifulSoup
 from typing import List
 from src.posts.models import Nhan
 from datetime import datetime
+from src.posts.dependencies import TrangThaiEnum
 
 logger = logging.getLogger(__name__)
 
+
+
+def du_lieu_status(TrangThaiEnum: str , trang_thais:List[TrangThaiEnum] , page : str ):
+    try:
+        url = None
+        headers = {"User-Agent": "Mozilla/5.0"}
+        if TrangThaiEnum.tu_choi in trang_thais:
+            url = f"https://vietnamtrademark.net/search?s=Từ%20chối&p={page}"
+            headers = {"User-Agent": "Mozilla/5.0"}
+        if url:
+            try:
+                resp = requests.get(url, headers=headers)
+                resp.raise_for_status()
+            except Exception as e:
+                logging.info(f"Lỗi khi gọi request: {e}")
+                return []
+
+            soup = BeautifulSoup(resp.text, "html.parser")
+            nhan_hieu = []
+
+            rows = soup.select("table tbody tr")
+            for row in rows:
+                cols = row.select("td")
+                if len(cols) >= 10:
+                    nhan_hieu = luu_model(cols, nhan_hieu)
+
+            return nhan_hieu
+        else:
+            return {"message": "Không có trạng thái nào được xử lý!"}
+    except Exception as e:
+        logging.info(f"Lỗi tổng quát: {e}")
+        return []
 
 def du_lieu_ten(q: str) -> List[Nhan]:
     url = f"https://vietnamtrademark.net/search?q={q}"
