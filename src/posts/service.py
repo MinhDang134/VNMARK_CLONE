@@ -3,19 +3,52 @@ from urllib.parse import quote_plus
 
 from requests import Session
 
-
 import requests
 from bs4 import BeautifulSoup
 from typing import List
 from src.posts.models import Nhan
 from datetime import datetime
-from src.posts.dependencies import TrangThaiEnum
+from src.posts.dependencies import TrangThaiEnum, LoaiDonEnum
 
 logger = logging.getLogger(__name__)
 
 
+def du_lieu_loaidon(LoaiDonENum: str, loaidons: List[LoaiDonEnum], page: str):
+    try:
+        url = None
+        headers = {"User-Agent": "Mozilla/5.0"}
+        if LoaiDonENum.don_quoc_gia in loaidons:
+            url = f"https://vietnamtrademark.net/search?t=0&p={page}"
+            headers = {"User-Agent": "Mozilla/5.0"}
+        if LoaiDonENum.don_quoc_te in loaidons:
+            url = f"https://vietnamtrademark.net/search?t=1&p={page}"
+            headers = {"User-Agent": "Mozilla/5.0"}
+        if url:
+            try:
+                resp = requests.get(url, headers=headers)
+                resp.raise_for_status()
+            except Exception as e:
+                logging.info(f"Lỗi khi gọi request: {e}")
+                return []
 
-def du_lieu_status(TrangThaiEnum: str , trang_thais:List[TrangThaiEnum] , page : str ):
+            soup = BeautifulSoup(resp.text, "html.parser")
+            nhan_hieu = []
+
+            rows = soup.select("table tbody tr")
+            for row in rows:
+                cols = row.select("td")
+                if len(cols) >= 10:
+                    nhan_hieu = luu_model(cols, nhan_hieu)
+
+            return nhan_hieu
+        else:
+            return {"message": "Không có trạng thái nào được xử lý!"}
+    except Exception as e:
+        logging.info(f"Lỗi tổng quát: {e}")
+        return []
+
+
+def du_lieu_status(TrangThaiEnum: str, trang_thais: List[TrangThaiEnum], page: str):
     try:
         url = None
         headers = {"User-Agent": "Mozilla/5.0"}
@@ -41,7 +74,7 @@ def du_lieu_status(TrangThaiEnum: str , trang_thais:List[TrangThaiEnum] , page :
         if TrangThaiEnum.rut_don in trang_thais and TrangThaiEnum.tu_choi in trang_thais:
             url = f"https://vietnamtrademark.net/search?s=Từ%20chối&s=Rút%20đơn&p={page}"
             headers = {"User-Agent": "Mozilla/5.0"}
-        #tu_choi
+        # tu_choi
         if TrangThaiEnum.tu_choi in trang_thais and TrangThaiEnum.dang_giai_quyet in trang_thais:
             url = f"https://vietnamtrademark.net/search?s=Đang%20giải%20quyết&s=Từ%20chối&p={page}"
             headers = {"User-Agent": "Mozilla/5.0"}
@@ -51,7 +84,7 @@ def du_lieu_status(TrangThaiEnum: str , trang_thais:List[TrangThaiEnum] , page :
         if TrangThaiEnum.tu_choi in trang_thais and TrangThaiEnum.rut_don in trang_thais:
             url = f"https://vietnamtrademark.net/search?s=Từ%20chối&s=Rút%20đơn&p={page}"
             headers = {"User-Agent": "Mozilla/5.0"}
-        #dang_giai_quyet
+        # dang_giai_quyet
         if TrangThaiEnum.dang_giai_quyet in trang_thais and TrangThaiEnum.tu_choi in trang_thais:
             url = f"https://vietnamtrademark.net/search?s=Đang%20giải%20quyết&s=Từ%20chối&p={page}"
             headers = {"User-Agent": "Mozilla/5.0"}
@@ -61,7 +94,7 @@ def du_lieu_status(TrangThaiEnum: str , trang_thais:List[TrangThaiEnum] , page :
         if TrangThaiEnum.dang_giai_quyet in trang_thais and TrangThaiEnum.rut_don in trang_thais:
             url = f"https://vietnamtrademark.net/search?s=Đang%20giải%20quyết&s=Rút%20đơn&p={page}"
             headers = {"User-Agent": "Mozilla/5.0"}
-        #cap_bang
+        # cap_bang
         if TrangThaiEnum.cap_bang in trang_thais and TrangThaiEnum.tu_choi in trang_thais:
             url = f"https://vietnamtrademark.net/search?s=Cấp%20bằng&s=Từ%20chối&p={page}"
             headers = {"User-Agent": "Mozilla/5.0"}
@@ -111,7 +144,8 @@ def du_lieu_status(TrangThaiEnum: str , trang_thais:List[TrangThaiEnum] , page :
         logging.info(f"Lỗi tổng quát: {e}")
         return []
 
-def du_lieu_ten(q: str,page:str) -> List[Nhan]:
+
+def du_lieu_ten(q: str, page: str) -> List[Nhan]:
     url = f"https://vietnamtrademark.net/search?q={q}&p={page}"
     headers = {"User-Agent": "Mozilla/5.0"}
 
@@ -134,7 +168,8 @@ def du_lieu_ten(q: str,page:str) -> List[Nhan]:
 
     return nhan_hieu
 
-def du_lieu_group(group: str,page:str) -> List[Nhan]:
+
+def du_lieu_group(group: str, page: str) -> List[Nhan]:
     url = f"https://vietnamtrademark.net/search?gop=any&g={group}&p={page}"
     headers = {"User-Agent": "Mozilla/5.0"}
 
@@ -156,7 +191,9 @@ def du_lieu_group(group: str,page:str) -> List[Nhan]:
             nhan_hieu = luu_model(cols, nhan_hieu)
 
     return nhan_hieu
-def du_lieu_ten_dd_shcn(q: str,page:str) -> List[Nhan]:
+
+
+def du_lieu_ten_dd_shcn(q: str, page: str) -> List[Nhan]:
     url = f"https://vietnamtrademark.net/search?a={q}&p={page}"
     headers = {"User-Agent": "Mozilla/5.0"}
 
@@ -201,7 +238,7 @@ def du_lieu_theo_ngay(startday: str, endday: str):
     for row in rows:
         cols = row.select("td")
         if len(cols) >= 10:
-            nhan_hieu = luu_model(cols,nhan_hieu)
+            nhan_hieu = luu_model(cols, nhan_hieu)
 
     return nhan_hieu
 
@@ -236,7 +273,8 @@ def luu_model(cols, dulieu: list):
 
     return dulieu
 
-def luu_from_router_don(stn: str , saved_stn: list,db : Session , nhan_crud: list):
+
+def luu_from_router_don(stn: str, saved_stn: list, db: Session, nhan_crud: list):
     try:
         created = nhan_crud.create_if_not_exists(
             db=db,

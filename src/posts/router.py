@@ -8,10 +8,10 @@ from typing import List
 from sqlalchemy.orm.persistence import save_obj
 from sqlmodel import Session
 from database import get_db
-from src.posts.dependencies import TrangThaiEnum
+from src.posts.dependencies import TrangThaiEnum,LoaiDonEnum
 from src.posts.models import Nhan
 from src.posts.service import du_lieu_ten, du_lieu_theo_ngay, luu_from_router_don, luu_model, du_lieu_status, \
-    du_lieu_ten_dd_shcn,du_lieu_group
+    du_lieu_ten_dd_shcn,du_lieu_group,du_lieu_loaidon
 from src.posts.crud_base import CRUDBase
 
 router = APIRouter()
@@ -64,6 +64,24 @@ def nhan_dulieu_group(page: Optional[str],group : str ,db: Session = Depends(get
         saved_dd_group = luu_from_router_don(dd_group_dulieu,saved_dd_group,db,nhan_crud)
     return  saved_dd_group
 
+@router.get("/search_chuho")
+def nhan_dulieu_chuho(page: Optional[str],chuho: str,db: Session = Depends(get_db)):
+    chuho_dulieu = du_lieu_ten_dd_shcn(chuho,page)
+    save_dd_chuho = []
+    for dd_shcn in chuho_dulieu:
+        saved_chuho = luu_from_router_don(dd_shcn, save_dd_chuho, db, nhan_crud)
+    return saved_chuho
+
+@router.get("/search_loai_don")
+def nhan_dulieu_loaidon(
+    page: Optional[str],
+    db : Session = Depends(get_db),
+    loaidons: List[LoaiDonEnum] = Query(..., title="Trạng thái cần lọc", description="Chọn một hoặc nhiều loại đơn xem ")):
+    ld_dulieu = du_lieu_loaidon(LoaiDonEnum,loaidons,page)
+    saved_ld = []
+    for ld in ld_dulieu:
+        saved_ld = luu_from_router_don(ld,saved_ld,db,nhan_crud)
+    return saved_ld
 
 
 

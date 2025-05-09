@@ -6,3 +6,7 @@ class TrangThaiEnum(str, Enum):
     cap_bang = "cấp bằng"
     tu_choi = "từ chối"
     rut_don = "rút đơn"
+
+class LoaiDonEnum(str,Enum):
+    don_quoc_te = "Đơn quốc tế "
+    don_quoc_gia = "Đơn quốc gia "
