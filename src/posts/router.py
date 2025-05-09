@@ -11,13 +11,13 @@ from database import get_db
 from src.posts.dependencies import TrangThaiEnum,LoaiDonEnum
 from src.posts.models import Nhan
 from src.posts.service import du_lieu_ten, du_lieu_theo_ngay, luu_from_router_don, luu_model, du_lieu_status, \
-    du_lieu_ten_dd_shcn,du_lieu_group,du_lieu_loaidon
+    du_lieu_ten_dd_shcn,du_lieu_group,du_lieu_loaidon,dulieu_n_mix_loaidon
 from src.posts.crud_base import CRUDBase
 
 router = APIRouter()
 nhan_crud = CRUDBase(Nhan)
 
-@router.get("/search_DON")
+@router.get("/search_DON----------------------")
 def root():
     return {"message": "API đang hoạt động bình thường"}
 
@@ -82,6 +82,22 @@ def nhan_dulieu_loaidon(
     for ld in ld_dulieu:
         saved_ld = luu_from_router_don(ld,saved_ld,db,nhan_crud)
     return saved_ld
+
+@router.get("/search_ten-----------------")
+def phankethop():
+    print("Phần kết hợp")
+
+@router.get("/search_name_mix_loaidon")
+def search_name_mix_loaidon(name_of_loaidon : str,
+                            page:str,
+                            db:Session = Depends(get_db)
+                            ,loaidons: List[LoaiDonEnum] = Query(..., title="Trạng thái cần lọc", description="Chọn một hoặc nhiều loại đơn xem ")):
+    nh_n_mix_loaidon = dulieu_n_mix_loaidon(name_of_loaidon,page,loaidons)
+    saved_n_mix_loaidon = []
+    for nh in nh_n_mix_loaidon:#
+            saved_n_mix_loaidon = luu_from_router_don(nh, saved_n_mix_loaidon, db, nhan_crud)
+    return saved_n_mix_loaidon
+
 
 
 
