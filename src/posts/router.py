@@ -10,7 +10,8 @@ from sqlmodel import Session
 from database import get_db
 from src.posts.dependencies import TrangThaiEnum
 from src.posts.models import Nhan
-from src.posts.service import du_lieu_ten, du_lieu_theo_ngay, luu_from_router_don, luu_model,du_lieu_status
+from src.posts.service import du_lieu_ten, du_lieu_theo_ngay, luu_from_router_don, luu_model, du_lieu_status, \
+    du_lieu_ten_dd_shcn
 from src.posts.crud_base import CRUDBase
 
 router = APIRouter()
@@ -47,9 +48,13 @@ def nhan_dulieu_status(
         saved_st = luu_from_router_don(st,saved_st,db,nhan_crud)
     return saved_st
 
-# @router.get("/research_shcn")
-# def nhan_dulieu_shcn(page: Optional[str],daidien_shcn: str,db: Session = Depends(get_db)):
-#     dd_shcn_dulieu = du_lieu_ten(daidien_shcn,page)
+@router.get("/research_shcn")
+def nhan_dulieu_shcn(page: Optional[str],daidien_shcn: str,db: Session = Depends(get_db)):
+    dd_shcn_dulieu = du_lieu_ten_dd_shcn(daidien_shcn,page)
+    save_dd_shcn = []
+    for dd_shcn in dd_shcn_dulieu:
+        saved_dd = luu_from_router_don(dd_shcn, save_dd_shcn, db, nhan_crud)
+    return saved_dd
 
 
 
