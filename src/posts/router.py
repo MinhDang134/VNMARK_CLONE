@@ -5,7 +5,7 @@ from sqlalchemy.orm.persistence import save_obj
 from sqlmodel import Session
 from database import get_db
 from src.posts.models import Nhan
-from src.posts.service import du_lieu_ten,du_lieu_theo_ngay
+from src.posts.service import du_lieu_ten,du_lieu_theo_ngay,luu_from_router_don
 from src.posts.crud_base import CRUDBase
 
 router = APIRouter()
@@ -21,34 +21,7 @@ def nhan_valuu_dulieu_nhanhieu(q: str, db: Session = Depends(get_db)):
     saved = []
 
     for nh in nh_dulieu:#
-        try:
-            created = nhan_crud.create_if_not_exists(
-                db=db,
-                obj_data=nh,
-                unique_fields=[
-                    "maunhan", "nhanhieu", "nhom", "status",
-                    "ngaynopdon", "sodon", "chudon", "daidienshcn"
-                ]
-            )
-            if created:
-                saved.append(created)
-        except Exception as e:
-            print(f"Lỗi khi xử lý bản ghi: {e}")
-            continue
-
-    try:
-        nhan_crud.save_changes(db)
-    except Exception as e:
-        print(f"Lỗi khi lưu vào CSDL: {e}")
-        return []
-
-    if not saved:
-        try:
-            return nhan_crud.get_all(db)
-        except Exception as e:
-            print(f"Lỗi khi truy xuất dữ liệu: {e}")
-            return []
-
+            saved_stn = luu_from_router_don(nh, saved, db, nhan_crud)
     return saved
 
 
@@ -58,31 +31,5 @@ def nhan_dulieu_search_theongay(start : str , end : str, db: Session = Depends(g
     saved_stn = []
 
     for stn in stn_dulieu:
-        try:
-            created = nhan_crud.create_if_not_exists(
-                db=db,
-                obj_data=stn,
-                unique_fields=[
-                    "maunhan", "nhanhieu", "nhom", "status",
-                    "ngaynopdon", "sodon", "chudon", "daidienshcn"
-                ]
-            )
-            if created:
-                saved_stn.append(created)
-        except Exception as e:
-            print(f"Lỗi khi xử lý search_theongay  bản ghi: {e}")
-            continue
-    try:
-        nhan_crud.save_changes(db)
-    except Exception as e:
-        print(f"Lỗi khi lưu search_theongay  vào CSDL: {e}")
-        return []
-
-    if not saved_stn:
-        try:
-            return nhan_crud.get_all(db)
-        except Exception as e:
-            print(f"Lỗi khi search_theongay dữ liệu: {e}")
-            return []
-
+        saved_stn = luu_from_router_don(stn,saved_stn,db,nhan_crud)
     return saved_stn

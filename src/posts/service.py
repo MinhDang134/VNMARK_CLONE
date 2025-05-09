@@ -1,6 +1,9 @@
 import logging
 from urllib.parse import quote_plus
 
+from requests import Session
+
+
 import requests
 from bs4 import BeautifulSoup
 from typing import List
@@ -89,3 +92,33 @@ def luu_model(cols, dulieu: list):
         logging.error(f"Lỗi khi xử lý dòng dữ liệu: {e}")
 
     return dulieu
+
+def luu_from_router_don(stn: str , saved_stn: list,db : Session , nhan_crud: list):
+    try:
+        created = nhan_crud.create_if_not_exists(
+            db=db,
+            obj_data=stn,
+            unique_fields=[
+                "maunhan", "nhanhieu", "nhom", "status",
+                "ngaynopdon", "sodon", "chudon", "daidienshcn"
+            ]
+        )
+        if created:
+            saved_stn.append(created)
+    except Exception as e:
+        print(f"Lỗi khi xử lý search_theongay  bản ghi: {e}")
+
+    try:
+        nhan_crud.save_changes(db)
+    except Exception as e:
+        print(f"Lỗi khi lưu search_theongay  vào CSDL: {e}")
+        return []
+
+    if not saved_stn:
+        try:
+            return nhan_crud.get_all(db)
+        except Exception as e:
+            print(f"Lỗi khi search_theongay dữ liệu: {e}")
+            return []
+
+    return saved_stn
