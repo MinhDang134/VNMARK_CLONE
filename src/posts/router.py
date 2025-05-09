@@ -1,16 +1,13 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from typing import List
-
-from fastapi.params import Depends
-from sqlmodel import Session, select
+from sqlmodel import Session
 from database import get_db
 from src.posts.models import Nhan
 from src.posts.service import du_lieu_ten
+from src.posts.crud_base import CRUDBase
 
 router = APIRouter()
-
-
-
+nhan_crud = CRUDBase(Nhan)
 
 @router.get("/")
 def root():
@@ -23,41 +20,31 @@ def nhan_valuu_dulieu_nhanhieu(q: str, db: Session = Depends(get_db)):
 
     for nh in nh_dulieu:
         try:
-            # Kiểm tra xem bản ghi đã tồn tại chưa
-            stmt = select(Nhan).where(
-                Nhan.maunhan == nh.maunhan,
-                Nhan.nhanhieu == nh.nhanhieu,
-                Nhan.nhom == nh.nhom,
-                Nhan.status == nh.status,
-                Nhan.ngaynopdon == nh.ngaynopdon,
-                Nhan.sodon == nh.sodon,
-                Nhan.chudon == nh.chudon,
-                Nhan.daidienshcn == nh.daidienshcn
+            created = nhan_crud.create_if_not_exists(
+                db=db,
+                obj_data=nh,
+                unique_fields=[
+                    "maunhan", "nhanhieu", "nhom", "status",
+                    "ngaynopdon", "sodon", "chudon", "daidienshcn"
+                ]
             )
-            result = db.exec(stmt).first()
-            
-            if not result:
-                db.add(nh)
-                saved.append(nh)
+            if created:
+                saved.append(created)
         except Exception as e:
             print(f"Lỗi khi xử lý bản ghi: {e}")
             continue
 
     try:
-        db.commit()
+        nhan_crud.save_changes(db)
     except Exception as e:
-        print(f"Lỗi khi lưu vào cơ sở dữ liệu: {e}")
-        db.rollback()
+        print(f"Lỗi khi lưu vào CSDL: {e}")
         return []
 
     if not saved:
         try:
-            # Sửa lại cách truy vấn để lấy tất cả bản ghi
-            stmt = select(Nhan)
-            results = db.exec(stmt).all()
-            return results
+            return nhan_crud.get_all(db)
         except Exception as e:
-            print(f"Lỗi khi lấy tất cả bản ghi: {e}")
+            print(f"Lỗi khi truy xuất dữ liệu: {e}")
             return []
 
     return saved

@@ -26,17 +26,17 @@ def du_lieu_ten(q: str) -> List[Nhan]:
     rows = soup.select("table tbody tr")
     for row in rows:
         cols = row.select("td")
-        if len(cols) >= 9:
+        if len(cols) >= 10 :
             try:
-                maunhan = cols[1].get_text(strip=True)
-                nhanhieu = cols[2].get_text(strip=True)
-                nhom = cols[3].get_text(strip=True)
-                status = cols[4].get_text(strip=True)
-                ngaynopdon_str = cols[5].get_text(strip=True)
+                maunhan = cols[2].get_text(strip=True)
+                nhanhieu = cols[3].get_text(strip=True)
+                nhom = cols[4].get_text(strip=True)
+                status = cols[5].get_text(strip=True)
+                ngaynopdon_str = cols[6].get_text(strip=True)
                 ngaynopdon = datetime.strptime(ngaynopdon_str, "%d/%m/%Y") if ngaynopdon_str and "/" in ngaynopdon_str else None
-                sodon = cols[6].get_text(strip=True)
-                chudon = cols[7].get_text(strip=True)
-                daidienshcn = cols[8].get_text(strip=True)
+                sodon = cols[7].get_text(strip=True)
+                chudon = cols[8].get_text(strip=True)
+                daidienshcn = cols[9].get_text(strip=True)
 
                 if nhanhieu:
                     nhan_hieu.append(
