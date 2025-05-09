@@ -11,7 +11,7 @@ from database import get_db
 from src.posts.dependencies import TrangThaiEnum
 from src.posts.models import Nhan
 from src.posts.service import du_lieu_ten, du_lieu_theo_ngay, luu_from_router_don, luu_model, du_lieu_status, \
-    du_lieu_ten_dd_shcn
+    du_lieu_ten_dd_shcn,du_lieu_group
 from src.posts.crud_base import CRUDBase
 
 router = APIRouter()
@@ -55,6 +55,14 @@ def nhan_dulieu_shcn(page: Optional[str],daidien_shcn: str,db: Session = Depends
     for dd_shcn in dd_shcn_dulieu:
         saved_dd = luu_from_router_don(dd_shcn, save_dd_shcn, db, nhan_crud)
     return saved_dd
+
+@router.get("/search_group")
+def nhan_dulieu_group(page: Optional[str],group : str ,db: Session = Depends(get_db)):
+    dd_group = du_lieu_group(group,page)
+    saved_dd_group = []
+    for dd_group_dulieu in dd_group:
+        saved_dd_group = luu_from_router_don(dd_group_dulieu,saved_dd_group,db,nhan_crud)
+    return  saved_dd_group
 
 
 
