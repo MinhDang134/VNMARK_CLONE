@@ -13,7 +13,7 @@ from src.posts.dependencies import TrangThaiEnum,LoaiDonEnum
 from src.posts.models import Nhan
 from src.posts.service import du_lieu_ten, du_lieu_theo_ngay, luu_from_router_don, luu_model, du_lieu_status, \
     du_lieu_ten_dd_shcn, du_lieu_group, du_lieu_loaidon, dulieu_n_mix_loaidon, du_lieu_ten_mix_group, \
-    du_lieu_ten_mix_shcn,du_lieu_ten_mix_chudon,du_lieu_search_name_date
+    du_lieu_ten_mix_shcn,du_lieu_ten_mix_chudon,du_lieu_search_name_date,du_lieu_name_status
 from src.posts.crud_base import CRUDBase
 
 router = APIRouter()
@@ -130,6 +130,21 @@ def search_name_mix_date(startday: str, endday: str ,name_mix_date: str,page:str
     for ng_date in name_dd_date:  # g
         saved_name_dd_date = luu_from_router_don(ng_date, saved_name_dd_date, db, nhan_crud)
     return saved_name_dd_date
+
+@router.get("/search_name_status")
+def nhan_dulieu_name_status(
+    page: Optional[str],
+    name_mix_status : str,
+    db : Session = Depends(get_db),
+    trang_thais: List[TrangThaiEnum] = Query(..., title="Trạng thái cần lọc", description="Chọn một hoặc nhiều trạng thái")):
+    st_dulieu_name = du_lieu_name_status(TrangThaiEnum,trang_thais,page,name_mix_status)
+    saved_st_name_status = []
+    for st_name_status in st_dulieu_name:
+        saved_st_name_status = luu_from_router_don(st_name_status,saved_st_name_status,db,nhan_crud)
+    return saved_st_name_status
+
+
+
 
 
 
