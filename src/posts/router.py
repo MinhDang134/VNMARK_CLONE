@@ -11,9 +11,10 @@ from sqlmodel import Session
 from database import get_db
 from src.posts.dependencies import TrangThaiEnum,LoaiDonEnum
 from src.posts.models import Nhan
-from src.posts.service import du_lieu_ten, du_lieu_theo_ngay, luu_from_router_don, luu_model, du_lieu_status, \
+from src.posts.from_status import du_lieu_status,du_lieu_name_status
+from src.posts.service import du_lieu_ten, du_lieu_theo_ngay, luu_from_router_don, luu_model, \
     du_lieu_ten_dd_shcn, du_lieu_group, du_lieu_loaidon, dulieu_n_mix_loaidon, du_lieu_ten_mix_group, \
-    du_lieu_ten_mix_shcn,du_lieu_ten_mix_chudon,du_lieu_search_name_date,du_lieu_name_status
+    du_lieu_ten_mix_shcn,du_lieu_ten_mix_chudon,du_lieu_search_name_date
 from src.posts.crud_base import CRUDBase
 
 router = APIRouter()
