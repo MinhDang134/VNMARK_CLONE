@@ -142,6 +142,9 @@ def nhan_dulieu_name_status(
     for st_name_status in st_dulieu_name:
         saved_st_name_status = luu_from_router_don(st_name_status,saved_st_name_status,db,nhan_crud)
     return saved_st_name_status
+@router.get("/bat_dau_phan_status--------------------")
+def status_dsa():
+    print("BẮt đầu phần status")
 
 
 
