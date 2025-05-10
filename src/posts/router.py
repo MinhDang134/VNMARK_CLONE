@@ -11,7 +11,8 @@ from database import get_db
 from src.posts.dependencies import TrangThaiEnum,LoaiDonEnum
 from src.posts.models import Nhan
 from src.posts.service import du_lieu_ten, du_lieu_theo_ngay, luu_from_router_don, luu_model, du_lieu_status, \
-    du_lieu_ten_dd_shcn,du_lieu_group,du_lieu_loaidon,dulieu_n_mix_loaidon,du_lieu_ten_mix_group
+    du_lieu_ten_dd_shcn, du_lieu_group, du_lieu_loaidon, dulieu_n_mix_loaidon, du_lieu_ten_mix_group, \
+    du_lieu_ten_mix_shcn
 from src.posts.crud_base import CRUDBase
 
 router = APIRouter()
@@ -106,6 +107,13 @@ def search_name_mix_group(name_mix_group : str, group : str,page:str , db:Sessio
     for ng in name_group:  #g
         saved_name_group = luu_from_router_don(ng, saved_name_group, db, nhan_crud)
     return saved_name_group
+@router.get("/search_name_mix_daidien_shcn")
+def search_name_mix_daidien_shcn(name_mix_daidien_shcn : str,daidien_shcn : str,page:str , db: Session = Depends(get_db)):
+    name_dd_shcn = du_lieu_ten_mix_shcn(name_mix_daidien_shcn, daidien_shcn, page)
+    saved_name_dd_shcn = []
+    for ng_shcn in name_dd_shcn:  # g
+        saved_name_dd_shcn = luu_from_router_don(ng_shcn, saved_name_dd_shcn, db, nhan_crud)
+    return saved_name_dd_shcn
 
 
 
