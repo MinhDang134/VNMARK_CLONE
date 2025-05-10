@@ -11,7 +11,7 @@ from sqlmodel import Session
 from database import get_db
 from src.posts.dependencies import TrangThaiEnum,LoaiDonEnum
 from src.posts.models import Nhan
-from src.posts.from_status import du_lieu_status, du_lieu_name_status, du_lieu_name_status_group
+from src.posts.from_status import du_lieu_status, du_lieu_name_status, du_lieu_name_status_group,du_lieu_status_group
 from src.posts.service import du_lieu_ten, du_lieu_theo_ngay, luu_from_router_don, luu_model, \
     du_lieu_ten_dd_shcn, du_lieu_group, du_lieu_loaidon, dulieu_n_mix_loaidon, du_lieu_ten_mix_group, \
     du_lieu_ten_mix_shcn,du_lieu_ten_mix_chudon,du_lieu_search_name_date
@@ -20,7 +20,7 @@ from src.posts.crud_base import CRUDBase
 router = APIRouter()
 nhan_crud = CRUDBase(Nhan)
 
-@router.get("/search_DON----------------------")
+@router.delete("/search_DON----------------------")
 def root():
     return {"message": "API đang hoạt động bình thường"}
 
@@ -86,7 +86,7 @@ def nhan_dulieu_loaidon(
         saved_ld = luu_from_router_don(ld,saved_ld,db,nhan_crud)
     return saved_ld
 
-@router.get("/search_ten-----------------")
+@router.delete("/search_ten__....")
 def phankethop():
     print("Phần kết hợp")
 
@@ -143,7 +143,23 @@ def nhan_dulieu_name_status(
     for st_name_status in st_dulieu_name:
         saved_st_name_status = luu_from_router_don(st_name_status,saved_st_name_status,db,nhan_crud)
     return saved_st_name_status
-@router.get("/bat_dau_phan_status--------------------")
+@router.delete("/status_...")
+def status_dsa():
+    print("BẮt đầu phần status")
+
+@router.get("/status_group")
+def status_group(
+    page: Optional[str],
+    group : str,
+    db : Session = Depends(get_db),
+    trang_thais: List[TrangThaiEnum] = Query(..., title="Trạng thái cần lọc", description="Chọn một hoặc nhiều trạng thái")):
+    st_dulieu_status_group = du_lieu_status_group(TrangThaiEnum,trang_thais,page,group)
+    saved_ststatus_group = []
+    for st_status_group in st_dulieu_status_group:
+        saved_ststatus_group = luu_from_router_don(st_status_group,saved_ststatus_group,db,nhan_crud)
+    return saved_ststatus_group
+
+@router.delete("/bat_dau_phan_status--------------------")
 def status_dsa():
     print("BẮt đầu phần status")
 @router.get("/search_name_status_group")
