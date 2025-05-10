@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 from typing import Optional
 import requests
 from bs4 import BeautifulSoup
@@ -12,7 +13,7 @@ from src.posts.dependencies import TrangThaiEnum,LoaiDonEnum
 from src.posts.models import Nhan
 from src.posts.service import du_lieu_ten, du_lieu_theo_ngay, luu_from_router_don, luu_model, du_lieu_status, \
     du_lieu_ten_dd_shcn, du_lieu_group, du_lieu_loaidon, dulieu_n_mix_loaidon, du_lieu_ten_mix_group, \
-    du_lieu_ten_mix_shcn,du_lieu_ten_mix_chudon
+    du_lieu_ten_mix_shcn,du_lieu_ten_mix_chudon,du_lieu_search_name_date
 from src.posts.crud_base import CRUDBase
 
 router = APIRouter()
@@ -121,6 +122,14 @@ def search_name_mix_chudon(name_mix_chudon : str,chudon : str,page:str , db: Ses
     for ng_chudon in name_dd_chudon:  # g
         saved_name_dd_chudon = luu_from_router_don(ng_chudon, saved_name_dd_chudon, db, nhan_crud)
     return saved_name_dd_chudon
+
+@router.get("/search_name_date")
+def search_name_mix_date(startday: str, endday: str ,name_mix_date: str,page:str, db: Session = Depends(get_db), ):
+    name_dd_date = du_lieu_search_name_date(startday,endday, name_mix_date, page)
+    saved_name_dd_date = []
+    for ng_date in name_dd_date:  # g
+        saved_name_dd_date = luu_from_router_don(ng_date, saved_name_dd_date, db, nhan_crud)
+    return saved_name_dd_date
 
 
 
