@@ -16,7 +16,8 @@ from src.posts.from_status import du_lieu_status, du_lieu_name_status, du_lieu_n
 from src.posts.service import du_lieu_ten, du_lieu_theo_ngay, luu_from_router_don, luu_model, \
     du_lieu_ten_dd_shcn, du_lieu_group, du_lieu_loaidon, dulieu_n_mix_loaidon, du_lieu_ten_mix_group, \
     du_lieu_ten_mix_shcn, du_lieu_ten_mix_chudon, du_lieu_search_name_date, du_lieu_group_dd_shcn, du_lieu_group_chudon, \
-    du_lieu_group_date, du_lieu_group_loaidon, du_lieu_shcn_date, du_lieu_chudon_date, du_lieu_loaidon_date
+    du_lieu_group_date, du_lieu_group_loaidon, du_lieu_shcn_date, du_lieu_chudon_date, du_lieu_loaidon_date, \
+    du_lieu_chudon_shcn
 from src.posts.crud_base import CRUDBase
 
 router = APIRouter()
@@ -279,6 +280,19 @@ def loaidon_date(startday : str,endday:str,
     for ng_loaidon_date in date_loaidon:  # g
         saved_loaidon_date = luu_from_router_don(ng_loaidon_date, saved_loaidon_date, db, nhan_crud)
     return saved_loaidon_date
+
+@router.delete("/dd_shcn_......")
+def inra():
+    print("dd_shcn..........")
+
+@router.get("/dd_shcn_chudon")
+def dd_shcn_chudon(chudon : str,daidien_shcn : str,page:str , db: Session = Depends(get_db)):
+    dd_shcn_chudon = du_lieu_chudon_shcn(chudon, daidien_shcn, page)
+    saved_chudon_dd_shcn = []
+    for ng_shcn_chudon in dd_shcn_chudon:  # g
+        saved_chudon_dd_shcn = luu_from_router_don(ng_shcn_chudon, saved_chudon_dd_shcn, db, nhan_crud)
+    return saved_chudon_dd_shcn
+
 @router.delete("/bat_dau_phan_status--------------------")
 def status_dsa():
     print("BẮt đầu phần status")
