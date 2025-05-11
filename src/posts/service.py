@@ -95,6 +95,7 @@ def du_lieu_ten(q: str, page: str) -> List[Nhan]:
     return nhan_hieu
 
 
+
 def du_lieu_group(group: str, page: str) -> List[Nhan]:
     url = f"https://vietnamtrademark.net/search?gop=any&g={group}&p={page}"
     headers = {"User-Agent": "Mozilla/5.0"}
@@ -214,8 +215,29 @@ def du_lieu_ten_mix_shcn(name_mix_shcn: str , dd_shcn : str , page:str)-> List[N
         cols = row.select("td")
         if len(cols) >= 10:
             nhan_hieu = luu_model(cols, nhan_hieu)
-
     return nhan_hieu
+def du_lieu_group_dd_shcn(group: str , dd_shcn : str , page:str)-> List[Nhan]:
+    url = f"https://vietnamtrademark.net/search?gop=any&g={group}&r={dd_shcn}&p={page}"
+    headers = {"User-Agent": "Mozilla/5.0"}
+
+    try:
+        resp = requests.get(url, headers=headers)
+        resp.raise_for_status()
+    except Exception as e:
+        logging.info(f"Lỗi khi gọi request: {e}")
+        logging.info("Không có dữ liệu")
+        return []
+
+    soup = BeautifulSoup(resp.text, "html.parser")
+    nhan_hieu = []
+
+    rows = soup.select("table tbody tr")
+    for row in rows:
+        cols = row.select("td")
+        if len(cols) >= 10:
+            nhan_hieu = luu_model(cols, nhan_hieu)
+    return nhan_hieu
+
 def du_lieu_ten_mix_chudon(name_mix_chudon: str , chudon : str , page:str)-> List[Nhan]:
     url = f"https://vietnamtrademark.net/search?q={name_mix_chudon}&a={chudon}&p={page}"
     headers = {"User-Agent": "Mozilla/5.0"}

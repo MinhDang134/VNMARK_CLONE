@@ -15,7 +15,7 @@ from src.posts.from_status import du_lieu_status, du_lieu_name_status, du_lieu_n
     du_lieu_status_dd_shcn, du_lieu_status_chudon,du_lieu_status_date,du_lieu_status_loaidon
 from src.posts.service import du_lieu_ten, du_lieu_theo_ngay, luu_from_router_don, luu_model, \
     du_lieu_ten_dd_shcn, du_lieu_group, du_lieu_loaidon, dulieu_n_mix_loaidon, du_lieu_ten_mix_group, \
-    du_lieu_ten_mix_shcn,du_lieu_ten_mix_chudon,du_lieu_search_name_date
+    du_lieu_ten_mix_shcn,du_lieu_ten_mix_chudon,du_lieu_search_name_date,du_lieu_group_dd_shcn
 from src.posts.crud_base import CRUDBase
 
 router = APIRouter()
@@ -207,6 +207,16 @@ def status_loaidon(
     for st_status_loaidon in st_dulieu_loaidon:
         saved_status_loaidon = luu_from_router_don(st_status_loaidon,st_dulieu_loaidon,db,nhan_crud)
     return saved_status_loaidon
+@router.delete("/group_......")
+def group_delete():
+    print("Dia Phan cua group")
+@router.get("/group_dd_shcn")
+def sroup_dd_shcn(group : str,daidien_shcn : str,page:str , db: Session = Depends(get_db)):
+    group_dd_shcn = du_lieu_group_dd_shcn(group, daidien_shcn, page)
+    saved_group_dd_shcn = []
+    for ng_group_shcn in group_dd_shcn:  # g
+        saved_group_dd_shcn = luu_from_router_don(ng_group_shcn, saved_group_dd_shcn, db, nhan_crud)
+    return saved_group_dd_shcn
 
 @router.delete("/bat_dau_phan_status--------------------")
 def status_dsa():
