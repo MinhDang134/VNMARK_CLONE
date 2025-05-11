@@ -15,7 +15,8 @@ from src.posts.from_status import du_lieu_status, du_lieu_name_status, du_lieu_n
     du_lieu_status_dd_shcn, du_lieu_status_chudon,du_lieu_status_date,du_lieu_status_loaidon
 from src.posts.service import du_lieu_ten, du_lieu_theo_ngay, luu_from_router_don, luu_model, \
     du_lieu_ten_dd_shcn, du_lieu_group, du_lieu_loaidon, dulieu_n_mix_loaidon, du_lieu_ten_mix_group, \
-    du_lieu_ten_mix_shcn,du_lieu_ten_mix_chudon,du_lieu_search_name_date,du_lieu_group_dd_shcn,du_lieu_group_chudon,du_lieu_group_date, du_lieu_group_loaidon
+    du_lieu_ten_mix_shcn, du_lieu_ten_mix_chudon, du_lieu_search_name_date, du_lieu_group_dd_shcn, du_lieu_group_chudon, \
+    du_lieu_group_date, du_lieu_group_loaidon, du_lieu_shcn_date
 from src.posts.crud_base import CRUDBase
 
 router = APIRouter()
@@ -245,6 +246,18 @@ def sroup_loaidon(group : str,page:str ,
     for ng_group_loaidon in group_loaidon:  # g
         saved_group_loaidon = luu_from_router_don(ng_group_loaidon, saved_group_loaidon, db, nhan_crud)
     return saved_group_loaidon
+
+@router.delete("/date_....")
+def delete_date():
+    print("Delete......")
+
+@router.get("/date_dd_shcn")
+def sroup_date(dd_shcn : str,startday : str,endday:str,page:str , db: Session = Depends(get_db)):
+    date_dd_shcn = du_lieu_shcn_date(dd_shcn, startday, endday, page)
+    saved_dd_shcn_date= []
+    for ng_dd_shcn_date in date_dd_shcn:  # g
+        saved_dd_shcn_date = luu_from_router_don(ng_dd_shcn_date, saved_dd_shcn_date, db, nhan_crud)
+    return saved_dd_shcn_date
 
 @router.delete("/bat_dau_phan_status--------------------")
 def status_dsa():
