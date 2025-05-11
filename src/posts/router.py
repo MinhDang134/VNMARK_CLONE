@@ -15,7 +15,7 @@ from src.posts.from_status import du_lieu_status, du_lieu_name_status, du_lieu_n
     du_lieu_status_dd_shcn, du_lieu_status_chudon,du_lieu_status_date,du_lieu_status_loaidon
 from src.posts.service import du_lieu_ten, du_lieu_theo_ngay, luu_from_router_don, luu_model, \
     du_lieu_ten_dd_shcn, du_lieu_group, du_lieu_loaidon, dulieu_n_mix_loaidon, du_lieu_ten_mix_group, \
-    du_lieu_ten_mix_shcn,du_lieu_ten_mix_chudon,du_lieu_search_name_date,du_lieu_group_dd_shcn,du_lieu_group_chudon,du_lieu_group_date
+    du_lieu_ten_mix_shcn,du_lieu_ten_mix_chudon,du_lieu_search_name_date,du_lieu_group_dd_shcn,du_lieu_group_chudon,du_lieu_group_date, du_lieu_group_loaidon
 from src.posts.crud_base import CRUDBase
 
 router = APIRouter()
@@ -235,6 +235,16 @@ def sroup_date(group : str,startday : str,endday:str,page:str , db: Session = De
         saved_group_date = luu_from_router_don(ng_group_date, saved_group_date, db, nhan_crud)
     return saved_group_date
 
+@router.get("/group_loaidon")
+def sroup_loaidon(group : str,page:str ,
+                  loaidons: List[LoaiDonEnum] = Query(..., title="Trạng thái cần lọc",
+                                                      description="Chọn một hoặc nhiều loại đơn xem "),
+                  db: Session = Depends(get_db)):
+    group_loaidon = du_lieu_group_loaidon(group,loaidons, page)
+    saved_group_loaidon= []
+    for ng_group_loaidon in group_loaidon:  # g
+        saved_group_loaidon = luu_from_router_don(ng_group_loaidon, saved_group_loaidon, db, nhan_crud)
+    return saved_group_loaidon
 
 @router.delete("/bat_dau_phan_status--------------------")
 def status_dsa():
