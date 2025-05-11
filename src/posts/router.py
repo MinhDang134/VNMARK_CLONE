@@ -12,7 +12,7 @@ from database import get_db
 from src.posts.dependencies import TrangThaiEnum,LoaiDonEnum
 from src.posts.models import Nhan
 from src.posts.from_status import du_lieu_status, du_lieu_name_status, du_lieu_name_status_group, du_lieu_status_group, \
-    du_lieu_status_dd_shcn, du_lieu_status_chudon,du_lieu_status_date
+    du_lieu_status_dd_shcn, du_lieu_status_chudon,du_lieu_status_date,du_lieu_status_loaidon
 from src.posts.service import du_lieu_ten, du_lieu_theo_ngay, luu_from_router_don, luu_model, \
     du_lieu_ten_dd_shcn, du_lieu_group, du_lieu_loaidon, dulieu_n_mix_loaidon, du_lieu_ten_mix_group, \
     du_lieu_ten_mix_shcn,du_lieu_ten_mix_chudon,du_lieu_search_name_date
@@ -195,6 +195,18 @@ def status_date(
     for st_status_date in st_dulieu_status_date:
         saved_status_date = luu_from_router_don(st_status_date,st_dulieu_status_date,db,nhan_crud)
     return saved_status_date
+
+@router.get("/status_loaidon")
+def status_loaidon(
+    page: Optional[str],
+    db : Session = Depends(get_db),
+    trang_thais: List[TrangThaiEnum] = Query(..., title="Trạng thái cần lọc", description="Chọn một hoặc nhiều trạng thái"),
+    loaidons: List[LoaiDonEnum] = Query(..., title="Trạng thái cần lọc", description="Chọn một hoặc nhiều loại đơn xem ")):
+    st_dulieu_loaidon = du_lieu_status_loaidon(TrangThaiEnum,trang_thais,page,loaidons)
+    saved_status_loaidon= []
+    for st_status_loaidon in st_dulieu_loaidon:
+        saved_status_loaidon = luu_from_router_don(st_status_loaidon,st_dulieu_loaidon,db,nhan_crud)
+    return saved_status_loaidon
 
 @router.delete("/bat_dau_phan_status--------------------")
 def status_dsa():
