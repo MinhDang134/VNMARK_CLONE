@@ -17,7 +17,7 @@ from src.posts.service import du_lieu_ten, du_lieu_theo_ngay, luu_from_router_do
     du_lieu_ten_dd_shcn, du_lieu_group, du_lieu_loaidon, dulieu_n_mix_loaidon, du_lieu_ten_mix_group, \
     du_lieu_ten_mix_shcn, du_lieu_ten_mix_chudon, du_lieu_search_name_date, du_lieu_group_dd_shcn, du_lieu_group_chudon, \
     du_lieu_group_date, du_lieu_group_loaidon, du_lieu_shcn_date, du_lieu_chudon_date, du_lieu_loaidon_date, \
-    du_lieu_chudon_shcn, du_lieu_dd_shcn_loaidon
+    du_lieu_chudon_shcn, du_lieu_dd_shcn_loaidon, du_lieu_chudon_loaidon
 from src.posts.crud_base import CRUDBase
 
 router = APIRouter()
@@ -303,6 +303,20 @@ def dd_shcn_loaidon(dd_shcn : str,page:str ,
     for ng_dd_shcn_loaidon in dd_shcn_loaidon:  # g
         saved_dd_shcn_loaidon = luu_from_router_don(ng_dd_shcn_loaidon, saved_dd_shcn_loaidon, db, nhan_crud)
     return saved_dd_shcn_loaidon
+
+@router.delete("/chudon_......")
+def inra():
+    print("chudon..........")
+@router.get("/chudon_loaidon")
+def chudon_loaidon(chudon : str,page:str ,
+                  loaidons: List[LoaiDonEnum] = Query(..., title="Trạng thái cần lọc",
+                                                      description="Chọn một hoặc nhiều loại đơn xem "),
+                  db: Session = Depends(get_db)):
+    chudon_loaidon = du_lieu_chudon_loaidon(chudon,loaidons, page)
+    saved_chudon_loaidon= []
+    for ng_chudon_loaidon in chudon_loaidon:  # g
+        saved_chudon_loaidon = luu_from_router_don(ng_chudon_loaidon, saved_chudon_loaidon, db, nhan_crud)
+    return saved_chudon_loaidon
 
 @router.delete("/bat_dau_phan_status--------------------")
 def status_dsa():
