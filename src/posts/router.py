@@ -12,7 +12,7 @@ from database import get_db
 from src.posts.dependencies import TrangThaiEnum,LoaiDonEnum
 from src.posts.models import Nhan
 from src.posts.from_status import du_lieu_status, du_lieu_name_status, du_lieu_name_status_group, du_lieu_status_group, \
-    du_lieu_status_dd_shcn, du_lieu_status_chudon,du_lieu_status_date,du_lieu_status_loaidon
+    du_lieu_status_dd_shcn, du_lieu_status_chudon, du_lieu_status_date, du_lieu_status_loaidon, du_lieu_name_status_shcn
 from src.posts.service import du_lieu_ten, du_lieu_theo_ngay, luu_from_router_don, luu_model, \
     du_lieu_ten_dd_shcn, du_lieu_group, du_lieu_loaidon, dulieu_n_mix_loaidon, du_lieu_ten_mix_group, \
     du_lieu_ten_mix_shcn, du_lieu_ten_mix_chudon, du_lieu_search_name_date, du_lieu_group_dd_shcn, du_lieu_group_chudon, \
@@ -333,6 +333,20 @@ def nhan_dulieu_name_status_group(
     for st_name_status_group in st_dulieu_name_status_group:
         saved_st_name_status_group = luu_from_router_don(st_name_status_group,saved_st_name_status_group,db,nhan_crud)
     return saved_st_name_status_group
+
+
+@router.get("/search_name_status_dd_shcn")
+def nhan_dulieu_name_status_dd_shcn(
+    page: Optional[str],
+    name : str,
+    dd_shcn : str,
+    db : Session = Depends(get_db),
+    trang_thais: List[TrangThaiEnum] = Query(..., title="Trạng thái cần lọc", description="Chọn một hoặc nhiều trạng thái")):
+    st_dulieu_name_status_shcn = du_lieu_name_status_shcn(TrangThaiEnum,trang_thais,page,name,dd_shcn)
+    saved_st_name_status_shcn = []
+    for st_name_status_shcn in st_dulieu_name_status_shcn:
+        saved_st_name_status_shcn= luu_from_router_don(st_name_status_shcn,saved_st_name_status_shcn,db,nhan_crud)
+    return saved_st_name_status_shcn
 
 
 
