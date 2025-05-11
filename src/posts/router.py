@@ -11,7 +11,8 @@ from sqlmodel import Session
 from database import get_db
 from src.posts.dependencies import TrangThaiEnum,LoaiDonEnum
 from src.posts.models import Nhan
-from src.posts.from_status import du_lieu_status, du_lieu_name_status, du_lieu_name_status_group,du_lieu_status_group
+from src.posts.from_status import du_lieu_status, du_lieu_name_status, du_lieu_name_status_group, du_lieu_status_group, \
+    du_lieu_status_dd_shcn, du_lieu_status_chudon
 from src.posts.service import du_lieu_ten, du_lieu_theo_ngay, luu_from_router_don, luu_model, \
     du_lieu_ten_dd_shcn, du_lieu_group, du_lieu_loaidon, dulieu_n_mix_loaidon, du_lieu_ten_mix_group, \
     du_lieu_ten_mix_shcn,du_lieu_ten_mix_chudon,du_lieu_search_name_date
@@ -158,6 +159,29 @@ def status_group(
     for st_status_group in st_dulieu_status_group:
         saved_ststatus_group = luu_from_router_don(st_status_group,saved_ststatus_group,db,nhan_crud)
     return saved_ststatus_group
+
+@router.get("/status_dd_shcn")
+def status_dd_shcn(
+    page: Optional[str],
+    dd_shcn : str,
+    db : Session = Depends(get_db),
+    trang_thais: List[TrangThaiEnum] = Query(..., title="Trạng thái cần lọc", description="Chọn một hoặc nhiều trạng thái")):
+    st_dulieu_status_dd_shcn = du_lieu_status_dd_shcn(TrangThaiEnum,trang_thais,page,dd_shcn)
+    saved_status_dd_shcn = []
+    for st_status_dd_shcn in st_dulieu_status_dd_shcn:
+        saved_status_dd_shcn = luu_from_router_don(st_status_dd_shcn,st_dulieu_status_dd_shcn,db,nhan_crud)
+    return saved_status_dd_shcn
+@router.get("/status_chudon")
+def status_chudon(
+    page: Optional[str],
+    chudon : str,
+    db : Session = Depends(get_db),
+    trang_thais: List[TrangThaiEnum] = Query(..., title="Trạng thái cần lọc", description="Chọn một hoặc nhiều trạng thái")):
+    st_dulieu_status_chudon = du_lieu_status_chudon(TrangThaiEnum,trang_thais,page,chudon)
+    saved_status_chudon = []
+    for st_status_chudon in st_dulieu_status_chudon:
+        saved_status_chudon = luu_from_router_don(st_status_chudon,st_dulieu_status_chudon,db,nhan_crud)
+    return saved_status_chudon
 
 @router.delete("/bat_dau_phan_status--------------------")
 def status_dsa():
