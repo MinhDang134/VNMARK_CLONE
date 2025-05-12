@@ -19,7 +19,7 @@ from src.posts.service import du_lieu_ten, du_lieu_theo_ngay, luu_from_router_do
     du_lieu_ten_mix_shcn, du_lieu_ten_mix_chudon, du_lieu_search_name_date, du_lieu_group_dd_shcn, du_lieu_group_chudon, \
     du_lieu_group_date, du_lieu_group_loaidon, du_lieu_shcn_date, du_lieu_chudon_date, du_lieu_loaidon_date, \
     du_lieu_chudon_shcn, du_lieu_dd_shcn_loaidon, du_lieu_chudon_loaidon, du_lieu_name_shcn_chudon, \
-    du_lieu_name_shcn_group
+    du_lieu_name_shcn_group, du_lieu_name_shcn_loaidon
 from src.posts.crud_base import CRUDBase
 
 router = APIRouter()
@@ -413,3 +413,16 @@ def name_shcn_group(name_sh_gr : str ,group : str,daidien_shcn : str,page:str , 
     for ng_name_shcn_group in name_shcn_group:  # g
         saved_name_shcn_group = luu_from_router_don(ng_name_shcn_group, ng_name_shcn_group, db, nhan_crud)
     return saved_name_shcn_group
+
+
+@router.get("/name_shcn_loaidon")
+def name_shcn_loaidon(dd_shcn : str,page:str ,
+                    name_sh_ld : str,
+                  loaidons: List[LoaiDonEnum] = Query(..., title="Trạng thái cần lọc",
+                                                      description="Chọn một hoặc nhiều loại đơn xem "),
+                  db: Session = Depends(get_db)):
+    name_shcn_loaidon = du_lieu_name_shcn_loaidon(name_sh_ld,dd_shcn,loaidons, page)
+    saved_name_shcn_loaidon= []
+    for ng_name_shcn_loaidon in name_shcn_loaidon:  # g
+        saved_name_shcn_loaidon = luu_from_router_don(ng_name_shcn_loaidon, saved_name_shcn_loaidon, db, nhan_crud)
+    return saved_name_shcn_loaidon
