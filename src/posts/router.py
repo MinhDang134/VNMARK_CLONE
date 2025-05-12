@@ -18,7 +18,8 @@ from src.posts.service import du_lieu_ten, du_lieu_theo_ngay, luu_from_router_do
     du_lieu_ten_dd_shcn, du_lieu_group, du_lieu_loaidon, dulieu_n_mix_loaidon, du_lieu_ten_mix_group, \
     du_lieu_ten_mix_shcn, du_lieu_ten_mix_chudon, du_lieu_search_name_date, du_lieu_group_dd_shcn, du_lieu_group_chudon, \
     du_lieu_group_date, du_lieu_group_loaidon, du_lieu_shcn_date, du_lieu_chudon_date, du_lieu_loaidon_date, \
-    du_lieu_chudon_shcn, du_lieu_dd_shcn_loaidon, du_lieu_chudon_loaidon, du_lieu_name_shcn_chudon
+    du_lieu_chudon_shcn, du_lieu_dd_shcn_loaidon, du_lieu_chudon_loaidon, du_lieu_name_shcn_chudon, \
+    du_lieu_name_shcn_group
 from src.posts.crud_base import CRUDBase
 
 router = APIRouter()
@@ -404,3 +405,11 @@ def search_name_shcn_chudon(name_sh_cd : str,daidien_shcn : str,chudon:str,page:
     for ng_shcn_chudon in name_shcn_chudon:  # g
         saved_name_shcn_chudon = luu_from_router_don(ng_shcn_chudon, saved_name_shcn_chudon, db, nhan_crud)
     return saved_name_shcn_chudon
+
+@router.get("/name_shcn_group")
+def name_shcn_group(name_sh_gr : str ,group : str,daidien_shcn : str,page:str , db: Session = Depends(get_db)):
+    name_shcn_group = du_lieu_name_shcn_group(name_sh_gr,group, daidien_shcn, page)
+    saved_name_shcn_group = []
+    for ng_name_shcn_group in name_shcn_group:  # g
+        saved_name_shcn_group = luu_from_router_don(ng_name_shcn_group, ng_name_shcn_group, db, nhan_crud)
+    return saved_name_shcn_group

@@ -634,3 +634,26 @@ def du_lieu_name_shcn_chudon(name_sh_cd: str , dd_shcn : str ,chudon : str, page
         if len(cols) >= 10:
             nhan_hieu = luu_model(cols, nhan_hieu)
     return nhan_hieu
+
+
+def du_lieu_name_shcn_group(name_sh_gr : str ,group: str , dd_shcn : str , page:str)-> List[Nhan]:
+    url = f"https://vietnamtrademark.net/search?q={name_sh_gr}&gop=any&g={group}&r={dd_shcn}&p={page}"
+    headers = {"User-Agent": "Mozilla/5.0"}
+
+    try:
+        resp = requests.get(url, headers=headers)
+        resp.raise_for_status()
+    except Exception as e:
+        logging.info(f"Lỗi khi gọi request: {e}")
+        logging.info("Không có dữ liệu")
+        return []
+
+    soup = BeautifulSoup(resp.text, "html.parser")
+    nhan_hieu = []
+
+    rows = soup.select("table tbody tr")
+    for row in rows:
+        cols = row.select("td")
+        if len(cols) >= 10:
+            nhan_hieu = luu_model(cols, nhan_hieu)
+    return nhan_hieu
