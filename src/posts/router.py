@@ -13,7 +13,7 @@ from src.posts.dependencies import TrangThaiEnum,LoaiDonEnum
 from src.posts.models import Nhan
 from src.posts.from_status import du_lieu_status, du_lieu_name_status, du_lieu_name_status_group, du_lieu_status_group, \
     du_lieu_status_dd_shcn, du_lieu_status_chudon, du_lieu_status_date, du_lieu_status_loaidon, \
-    du_lieu_name_status_shcn, du_lieu_name_status_chudon, du_lieu_name_status_loaidon
+    du_lieu_name_status_shcn, du_lieu_name_status_chudon, du_lieu_name_status_loaidon, du_lieu_name_status_date
 from src.posts.service import du_lieu_ten, du_lieu_theo_ngay, luu_from_router_don, luu_model, \
     du_lieu_ten_dd_shcn, du_lieu_group, du_lieu_loaidon, dulieu_n_mix_loaidon, du_lieu_ten_mix_group, \
     du_lieu_ten_mix_shcn, du_lieu_ten_mix_chudon, du_lieu_search_name_date, du_lieu_group_dd_shcn, du_lieu_group_chudon, \
@@ -319,7 +319,7 @@ def chudon_loaidon(chudon : str,page:str ,
         saved_chudon_loaidon = luu_from_router_don(ng_chudon_loaidon, saved_chudon_loaidon, db, nhan_crud)
     return saved_chudon_loaidon
 
-@router.delete("/bat_dau_phan_status--------------------")
+@router.delete("/name_status_...")
 def status_dsa():
     print("BẮt đầu phần status")
 @router.get("/search_name_status_group")
@@ -377,6 +377,22 @@ def name_status_loaidon(
     for st_name_status_loaidon in st_name_status_loaidon:
         saved_name_status_loaidon = luu_from_router_don(st_name_status_loaidon,saved_name_status_loaidon,db,nhan_crud)
     return saved_name_status_loaidon
+
+@router.get("/name_status_date")
+def name_status_loaidon(
+    page: Optional[str],
+    name_st_d : str,
+    startday : str,
+    endday : str,
+    db : Session = Depends(get_db),
+    trang_thais: List[TrangThaiEnum] = Query(..., title="Trạng thái cần lọc", description="Chọn một hoặc nhiều trạng thái"),
+
+    ):
+    st_name_status_date = du_lieu_name_status_date(TrangThaiEnum,trang_thais,page,name_st_d,startday,endday)
+    saved_name_status_date= []
+    for st_name_status_date in st_name_status_date:
+        saved_name_status_date = luu_from_router_don(st_name_status_date,saved_name_status_date,db,nhan_crud)
+    return saved_name_status_date
 
 
 
