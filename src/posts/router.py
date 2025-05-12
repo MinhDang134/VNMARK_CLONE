@@ -19,7 +19,7 @@ from src.posts.service import du_lieu_ten, du_lieu_theo_ngay, luu_from_router_do
     du_lieu_ten_mix_shcn, du_lieu_ten_mix_chudon, du_lieu_search_name_date, du_lieu_group_dd_shcn, du_lieu_group_chudon, \
     du_lieu_group_date, du_lieu_group_loaidon, du_lieu_shcn_date, du_lieu_chudon_date, du_lieu_loaidon_date, \
     du_lieu_chudon_shcn, du_lieu_dd_shcn_loaidon, du_lieu_chudon_loaidon, du_lieu_name_shcn_chudon, \
-    du_lieu_name_shcn_group, du_lieu_name_shcn_loaidon, du_lieu_name_shcn_date
+    du_lieu_name_shcn_group, du_lieu_name_shcn_loaidon, du_lieu_name_shcn_date, du_lieu_name_chudon_group
 from src.posts.crud_base import CRUDBase
 
 router = APIRouter()
@@ -434,3 +434,12 @@ def name_shcn_date(name_sh_d : str,dd_shcn : str,startday : str,endday:str,page:
     for ng_name_shcn_date in name_shcn_date:  # g
         saved_name_shcn_date = luu_from_router_don(ng_name_shcn_date, saved_name_shcn_date, db, nhan_crud)
     return saved_name_shcn_date
+
+
+@router.get("/name_chudon_group")
+def name_chudon_group(name_cd_gr : str ,group : str,chudon : str,page:str , db: Session = Depends(get_db)):
+    name_chudon_group = du_lieu_name_chudon_group(name_cd_gr,group, chudon, page)
+    saved_name_chudon_group= []
+    for ng_name_chudon_group in name_chudon_group:  # g
+        saved_name_chudon_group = luu_from_router_don(ng_name_chudon_group, saved_name_chudon_group, db, nhan_crud)
+    return saved_name_chudon_group
