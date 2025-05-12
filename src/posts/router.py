@@ -19,7 +19,8 @@ from src.posts.service import du_lieu_ten, du_lieu_theo_ngay, luu_from_router_do
     du_lieu_ten_mix_shcn, du_lieu_ten_mix_chudon, du_lieu_search_name_date, du_lieu_group_dd_shcn, du_lieu_group_chudon, \
     du_lieu_group_date, du_lieu_group_loaidon, du_lieu_shcn_date, du_lieu_chudon_date, du_lieu_loaidon_date, \
     du_lieu_chudon_shcn, du_lieu_dd_shcn_loaidon, du_lieu_chudon_loaidon, du_lieu_name_shcn_chudon, \
-    du_lieu_name_shcn_group, du_lieu_name_shcn_loaidon, du_lieu_name_shcn_date, du_lieu_name_chudon_group
+    du_lieu_name_shcn_group, du_lieu_name_shcn_loaidon, du_lieu_name_shcn_date, du_lieu_name_chudon_group, \
+    du_lieu_name_chudon_loaidon
 from src.posts.crud_base import CRUDBase
 
 router = APIRouter()
@@ -435,7 +436,9 @@ def name_shcn_date(name_sh_d : str,dd_shcn : str,startday : str,endday:str,page:
         saved_name_shcn_date = luu_from_router_don(ng_name_shcn_date, saved_name_shcn_date, db, nhan_crud)
     return saved_name_shcn_date
 
-
+@router.delete("/name_chudon_....")
+def linhtinh():
+    print("chill di")
 @router.get("/name_chudon_group")
 def name_chudon_group(name_cd_gr : str ,group : str,chudon : str,page:str , db: Session = Depends(get_db)):
     name_chudon_group = du_lieu_name_chudon_group(name_cd_gr,group, chudon, page)
@@ -443,3 +446,16 @@ def name_chudon_group(name_cd_gr : str ,group : str,chudon : str,page:str , db: 
     for ng_name_chudon_group in name_chudon_group:  # g
         saved_name_chudon_group = luu_from_router_don(ng_name_chudon_group, saved_name_chudon_group, db, nhan_crud)
     return saved_name_chudon_group
+
+
+@router.get("/name_chudon_loaidon")
+def name_chudon_loaidon(name_cd_ld : str,
+                        chudon : str,page:str ,
+                  loaidons: List[LoaiDonEnum] = Query(..., title="Trạng thái cần lọc",
+                                                      description="Chọn một hoặc nhiều loại đơn xem "),
+                  db: Session = Depends(get_db)):
+    name_chudon_loaidon = du_lieu_name_chudon_loaidon(name_cd_ld,chudon,loaidons, page)
+    saved_name_chudon_loaidon= []
+    for ng_name_chudon_loaidon in name_chudon_loaidon:  # g
+        saved_name_chudon_loaidon = luu_from_router_don(ng_name_chudon_loaidon, saved_name_chudon_loaidon, db, nhan_crud)
+    return saved_name_chudon_loaidon
