@@ -551,6 +551,32 @@ def du_lieu_name_shcn_loaidon(name_sh_ld : str , dd_shcn: str,loaidons: List[Loa
     return nhan_hieu
 
 
+def du_lieu_name_shcn_date(name_sh_d : str ,dd_shcn: str,startday: str, endday: str,page:str):
+    startday_fix = datetime.strptime(startday, "%d-%m-%Y")
+    endday_fix = datetime.strptime(endday, "%d-%m-%Y")
+    fd_param = quote_plus(f"{startday_fix.strftime('%d/%m/%Y')} - {endday_fix.strftime('%d/%m/%Y')}")
+    url = f"https://vietnamtrademark.net/search?q={name_sh_d}&r={dd_shcn}&fd={fd_param}&p={page}"
+    headers = {"User-Agent": "Mozilla/5.0"}
+    try:
+        resp = requests.get(url, headers=headers)
+        resp.raise_for_status()
+    except Exception as e:
+        logging.info(f"Lỗi khi gọi request: {e}")
+        logging.info("Không có dữ liệu")
+        return []
+
+    soup = BeautifulSoup(resp.text, "html.parser")
+    nhan_hieu = []
+
+    rows = soup.select("table tbody tr")
+    for row in rows:
+        cols = row.select("td")
+        if len(cols) >= 10:
+            nhan_hieu = luu_model(cols, nhan_hieu)
+
+    return nhan_hieu
+
+
 def luu_model(cols, dulieu: list):
     try:
         maunhan = cols[2].get_text(strip=True)
