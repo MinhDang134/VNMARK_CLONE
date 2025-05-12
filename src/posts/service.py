@@ -588,3 +588,49 @@ def luu_from_router_don(stn: str, saved_stn: list, db: Session, nhan_crud: list)
             return []
 
     return saved_stn
+
+
+def du_lieu_ten_mix_shcn(name_mix_shcn: str , dd_shcn : str , page:str)-> List[Nhan]:
+    url = f"https://vietnamtrademark.net/search?q={name_mix_shcn}&r={dd_shcn}&p={page}"
+    headers = {"User-Agent": "Mozilla/5.0"}
+
+    try:
+        resp = requests.get(url, headers=headers)
+        resp.raise_for_status()
+    except Exception as e:
+        logging.info(f"Lỗi khi gọi request: {e}")
+        logging.info("Không có dữ liệu")
+        return []
+
+    soup = BeautifulSoup(resp.text, "html.parser")
+    nhan_hieu = []
+
+    rows = soup.select("table tbody tr")
+    for row in rows:
+        cols = row.select("td")
+        if len(cols) >= 10:
+            nhan_hieu = luu_model(cols, nhan_hieu)
+    return nhan_hieu
+
+
+def du_lieu_name_shcn_chudon(name_sh_cd: str , dd_shcn : str ,chudon : str, page:str)-> List[Nhan]:
+    url = f"https://vietnamtrademark.net/search?q={name_sh_cd}&r={dd_shcn}&a={chudon}&p={page}"
+    headers = {"User-Agent": "Mozilla/5.0"}
+
+    try:
+        resp = requests.get(url, headers=headers)
+        resp.raise_for_status()
+    except Exception as e:
+        logging.info(f"Lỗi khi gọi request: {e}")
+        logging.info("Không có dữ liệu")
+        return []
+
+    soup = BeautifulSoup(resp.text, "html.parser")
+    nhan_hieu = []
+
+    rows = soup.select("table tbody tr")
+    for row in rows:
+        cols = row.select("td")
+        if len(cols) >= 10:
+            nhan_hieu = luu_model(cols, nhan_hieu)
+    return nhan_hieu

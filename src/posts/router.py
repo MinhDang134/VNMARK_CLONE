@@ -18,7 +18,7 @@ from src.posts.service import du_lieu_ten, du_lieu_theo_ngay, luu_from_router_do
     du_lieu_ten_dd_shcn, du_lieu_group, du_lieu_loaidon, dulieu_n_mix_loaidon, du_lieu_ten_mix_group, \
     du_lieu_ten_mix_shcn, du_lieu_ten_mix_chudon, du_lieu_search_name_date, du_lieu_group_dd_shcn, du_lieu_group_chudon, \
     du_lieu_group_date, du_lieu_group_loaidon, du_lieu_shcn_date, du_lieu_chudon_date, du_lieu_loaidon_date, \
-    du_lieu_chudon_shcn, du_lieu_dd_shcn_loaidon, du_lieu_chudon_loaidon
+    du_lieu_chudon_shcn, du_lieu_dd_shcn_loaidon, du_lieu_chudon_loaidon, du_lieu_name_shcn_chudon
 from src.posts.crud_base import CRUDBase
 
 router = APIRouter()
@@ -394,5 +394,13 @@ def name_status_loaidon(
         saved_name_status_date = luu_from_router_don(st_name_status_date,saved_name_status_date,db,nhan_crud)
     return saved_name_status_date
 
-
-
+@router.delete("/name_shcn_...")
+def cuchilldi():
+    print("sadasdas")
+@router.get("/name_shcn_chudon")
+def search_name_shcn_chudon(name_sh_cd : str,daidien_shcn : str,chudon:str,page:str , db: Session = Depends(get_db)):
+    name_shcn_chudon= du_lieu_name_shcn_chudon(name_sh_cd, daidien_shcn,chudon, page)
+    saved_name_shcn_chudon = []
+    for ng_shcn_chudon in name_shcn_chudon:  # g
+        saved_name_shcn_chudon = luu_from_router_don(ng_shcn_chudon, saved_name_shcn_chudon, db, nhan_crud)
+    return saved_name_shcn_chudon
